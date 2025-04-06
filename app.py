@@ -59,7 +59,7 @@ if "okuma_durumu" not in st.session_state:
 yuklenen_pdf = st.file_uploader("Bir PDF dosyası seçin", type=["pdf"])
 if yuklenen_pdf:
     st.session_state.sayfalar = pdf_yukle_ve_bol(yuklenen_pdf)
-    st.success(f"{len(st.session_state.sayfalar)} sayfa başarıyla yüklendi.")
+    st.success(f"{len(st.session_state.sayfalar)} Sayfa başarıyla yüklendi.")
 
 # Sayfa Seçimi
 if st.session_state.sayfalar:
@@ -96,7 +96,7 @@ if st.session_state.sayfalar:
         if st.button("🔽 -10"):
             st.session_state.hiz_wpm = max(st.session_state.hiz_wpm - 10, 50)
 
-    st.markdown(f"🔧 Seçili Hız: **{st.session_state.hiz_wpm}** kelime/dk")
+    st.success(f"📊 Anlık Okuma Hızı: **{st.session_state.hiz_wpm} Kelime/Dakika**")
     hiz_ms = 60000 / st.session_state.hiz_wpm
 
     # Başlat / Durdur Butonları
