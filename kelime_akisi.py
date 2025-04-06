@@ -3,15 +3,21 @@ import time
 
 def kelime_akisi(metin, hiz_ms):
     """
-    Verilen metni kelime kelime Streamlit arayüzünde gösterir.
-    hiz_ms: kelime başına gösterim süresi (milisaniye)
+    Metni cümle cümle gösterir, her cümlede bir duraklama olur.
+    hiz_ms: 1 kelime başına milisaniye (hız)
     """
-    kelimeler = metin.split()
+    cumleler = metin.split(". ")
     alan = st.empty()
 
-    for kelime in kelimeler:
+    for cumle in cumleler:
+        if not st.session_state.okuma_durumu:
+            break  # durdurulduysa çık
+
+        kelime_sayisi = len(cumle.split())
+        toplam_sure = kelime_sayisi * hiz_ms / 1000.0  # saniyeye çevir
+
         alan.markdown(
-            f"<h1 style='text-align:center; color:white; font-family:Inter;'>{kelime}</h1>",
+            f"<h2 style='color:white; font-family:Inter; text-align:center;'>{cumle.strip()}.</h2>",
             unsafe_allow_html=True
         )
-        time.sleep(hiz_ms / 1000.0)
+        time.sleep(toplam_sure)
