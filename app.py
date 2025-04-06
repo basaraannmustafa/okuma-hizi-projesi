@@ -108,8 +108,17 @@ if st.session_state.sayfalar:
         if st.button("⏸️ Durdur", use_container_width=True):
             st.session_state.okuma_durumu = False
 
+    alan = st.empty()
+
     if st.session_state.okuma_durumu:
-        kelime_akisi(metin, hiz_ms)
+        kelime_akisi(metin, hiz_ms, alan)
+    else:
+        if st.session_state.get("son_kelime"):
+            alan.markdown(
+                f"<h2 style='text-align:center; color:white; font-family:Inter;'>{st.session_state.son_kelime}</h2>",
+                unsafe_allow_html=True
+            )
+
     
     if "cumle_index" not in st.session_state:
         st.session_state.cumle_index = 0
