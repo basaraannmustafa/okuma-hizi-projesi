@@ -22,16 +22,18 @@ def kelime_akisi(metin, hiz_ms):
 
     alan = st.empty()
 
-    # Her durumda son gösterilen kelimeyi ekrana bas
+    # Her durumda son gösterilen kelimeyi göster
     if st.session_state.son_kelime:
         alan.markdown(
             f"<h2 style='text-align:center; color:white; font-family:Inter;'>{st.session_state.son_kelime}</h2>",
             unsafe_allow_html=True
         )
 
+    # Okuma aktif değilse sadece gösterim yap, ilerleme
     if not st.session_state.okuma_durumu:
         return
 
+    # Akışı başlat
     while st.session_state.cumle_index < len(cumleler):
         cumle = cumleler[st.session_state.cumle_index].strip()
         kelimeler = cumle.split()
@@ -40,6 +42,10 @@ def kelime_akisi(metin, hiz_ms):
             if not st.session_state.okuma_durumu:
                 st.session_state.kelime_index = i
                 st.session_state.son_kelime = kelimeler[i]
+                alan.markdown(
+                    f"<h2 style='text-align:center; color:white; font-family:Inter;'>{kelimeler[i]}</h2>",
+                    unsafe_allow_html=True
+                )
                 return
 
             st.session_state.son_kelime = kelimeler[i]
