@@ -5,13 +5,14 @@ import re
 def kelime_akisi(metin, hiz_ms):
     """
     Cümle cümle ve kelime kelime gösterim.
-    Durdurulunca kelime ekranda kalır, devam edince kaldığı yerden devam eder.
+    Her cümle ekranda tek satırda akar.
+    Durdurulursa, kaldığı yerden devam eder ve durduğu kelime ekranda kalır.
     """
 
-    # Cümleleri ayır
+    # Cümleleri böl
     cumleler = re.split(r'(?<=[.!?]) +', metin)
 
-    # Oturum değişkenleri
+    # Oturumda cümle ve kelime index'leri yoksa tanımla
     if "cumle_index" not in st.session_state:
         st.session_state.cumle_index = 0
     if "kelime_index" not in st.session_state:
@@ -21,23 +22,26 @@ def kelime_akisi(metin, hiz_ms):
 
     alan = st.empty()
 
-    # Akışı başlat
+    # Her durumda son gösterilen kelimeyi ekrana bas
+    if st.session_state.son_kelime:
+        alan.markdown(
+            f"<h2 style='text-align:center; color:white; font-family:Inter;'>{st.session_state.son_kelime}</h2>",
+            unsafe_allow_html=True
+        )
+
+    if not st.session_state.okuma_durumu:
+        return
+
     while st.session_state.cumle_index < len(cumleler):
         cumle = cumleler[st.session_state.cumle_index].strip()
         kelimeler = cumle.split()
 
         for i in range(st.session_state.kelime_index, len(kelimeler)):
-            # Durdurulduysa: kelimeyi göster ama döngüden çık
             if not st.session_state.okuma_durumu:
                 st.session_state.kelime_index = i
                 st.session_state.son_kelime = kelimeler[i]
-                alan.markdown(
-                    f"<h2 style='text-align:center; color:white; font-family:Inter;'>{kelimeler[i]}</h2>",
-                    unsafe_allow_html=True
-                )
                 return
 
-            # Devam ediyorsa: kelimeyi göster ve ilerle
             st.session_state.son_kelime = kelimeler[i]
             alan.markdown(
                 f"<h2 style='text-align:center; color:white; font-family:Inter;'>{kelimeler[i]}</h2>",
@@ -45,17 +49,9 @@ def kelime_akisi(metin, hiz_ms):
             )
             time.sleep(hiz_ms / 1000)
 
-        # Cümle bitti
+        # Cümle bittiğinde bir sonrakine geç
         st.session_state.cumle_index += 1
         st.session_state.kelime_index = 0
 
-    # Tüm metin bittiğinde durdur (istersen sıfırlamayı kaldırabiliriz)
+    # Metin bittiğinde okuma durumu kapatılır ama son kelime ekranda kalır
     st.session_state.okuma_durumu = False
-    st.session_state.cumle_index = 0
-    st.session_state.kelime_index = 0
-
-    # Son kelimeyi ekranda tut
-    alan.markdown(
-        f"<h2 style='text-align:center; color:white; font-family:Inter;'>{st.session_state.son_kelime}</h2>",
-        unsafe_allow_html=True
-    )
