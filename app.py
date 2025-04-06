@@ -73,6 +73,10 @@ if st.session_state.sayfalar:
         if st.button("İleri ➡️", use_container_width=True):
             st.session_state.aktif_sayfa = min(toplam - 1, st.session_state.aktif_sayfa + 1)
 
+        sayfa_no = st.number_input("Gitmek istediğiniz sayfa", min_value=1, max_value=toplam, value=st.session_state.aktif_sayfa + 1)
+        st.session_state.aktif_sayfa = sayfa_no - 1
+
+
     st.markdown(f"**Sayfa {st.session_state.aktif_sayfa + 1} / {toplam}**")
     st.markdown("---")
 
@@ -95,3 +99,6 @@ if st.session_state.sayfalar:
 
     if st.session_state.okuma_durumu:
         kelime_akisi(metin, hiz_ms)
+    
+    if "cumle_index" not in st.session_state:
+        st.session_state.cumle_index = 0
