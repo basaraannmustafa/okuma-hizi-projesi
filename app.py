@@ -1,19 +1,32 @@
-import streamlit as st
+import streamlit as st 
 from pdf_isleyici import pdf_yukle_ve_bol
 from kelime_akisi import kelime_akisi
 from utils import metni_temizle, kelime_say
 
-secenek = st.sidebar.radio("📚 Menü", ["Ana Sayfa", "Okuma"])
+st.set_page_config(
+    page_title="Okuma Hızı Uygulaması",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
 
-if secenek == "Ana Sayfa":
+# Menü durumu
+if "sayfa" not in st.session_state:
+    st.session_state.sayfa = "Ana Sayfa"
+
+col1, col2 = st.columns(2)
+with col1:
+    if st.button("🏠 Ana Sayfa", use_container_width=True):
+        st.session_state.sayfa = "Ana Sayfa"
+with col2:
+    if st.button("📖 Okuma", use_container_width=True):
+        st.session_state.sayfa = "Okuma"   
+
+if st.session_state.sayfa == "Ana Sayfa":
     st.title("📘 Hızlı Okuma Uygulamasına Hoş Geldin!")
     st.write("PDF dosyanı yükle, hızını seç ve odaklanarak oku!")
-    st.write("👈 Soldaki menüden 'Okuma' sekmesine geçerek başlayabilirsin.")
-    st.stop()  # Ana sayfadaysan aşağıdaki kodlar çalışmasın
+    st.stop()
 
-# Streamlit Sayfa Ayarları
-st.set_page_config(page_title="Okuma Hızı Uygulaması", layout="centered", initial_sidebar_state="collapsed")
-
+# Tema
 st.markdown(
     """
     <style>
@@ -39,19 +52,8 @@ if "sayfalar" not in st.session_state:
     st.session_state.sayfalar = []
 if "aktif_sayfa" not in st.session_state:
     st.session_state.aktif_sayfa = 0
-
-# Okuma durumu kontrolü
 if "okuma_durumu" not in st.session_state:
     st.session_state.okuma_durumu = False
-
-# Butonlar
-col_baslat, col_durdur = st.columns([1, 1])
-with col_baslat:
-    if st.button("▶️ Başlat", use_container_width=True):
-        st.session_state.okuma_durumu = True
-with col_durdur:
-    if st.button("⏸️ Durdur", use_container_width=True):
-        st.session_state.okuma_durumu = False    
 
 # PDF Yükleme
 yuklenen_pdf = st.file_uploader("Bir PDF dosyası seçin", type=["pdf"])
@@ -91,6 +93,5 @@ if st.session_state.sayfalar:
         if st.button("⏸️ Durdur", use_container_width=True):
             st.session_state.okuma_durumu = False
 
-    # Eğer durum açık ise akışı başlat
     if st.session_state.okuma_durumu:
         kelime_akisi(metin, hiz_ms)
