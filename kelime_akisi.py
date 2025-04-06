@@ -28,6 +28,10 @@ def kelime_akisi(metin, hiz_ms):
         # Kaldığı kelimeden başla
         for i in range(st.session_state.kelime_index, len(kelimeler)):
             if not st.session_state.okuma_durumu:
+                alan.markdown(
+                    f"<h2 style='text-align:center; color:white; font-family:Inter;'>{kelimeler[i]}</h2>",
+                    unsafe_allow_html=True
+                )
                 # Durdurulursa index'i sakla ve çık
                 st.session_state.kelime_index = i
                 return

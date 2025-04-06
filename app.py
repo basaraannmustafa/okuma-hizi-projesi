@@ -85,8 +85,19 @@ if st.session_state.sayfalar:
     st.markdown(f"📝 Kelime Sayısı: **{kelime_say(metin)}**")
 
     # Hız ayarı
-    wpm = st.slider("Hız (Kelime/Dakika)", min_value=100, max_value=1000, step=50, value=300)
-    hiz_ms = 60000 / wpm
+    if "hiz_wpm" not in st.session_state:
+        st.session_state.hiz_wpm = 250
+
+    col_artir, col_azalt = st.columns([1, 1])
+    with col_artir:
+        if st.button("🔼 +10"):
+            st.session_state.hiz_wpm = min(st.session_state.hiz_wpm + 10, 1000)
+    with col_azalt:
+        if st.button("🔽 -10"):
+            st.session_state.hiz_wpm = max(st.session_state.hiz_wpm - 10, 50)
+
+    st.markdown(f"🔧 Seçili Hız: **{st.session_state.hiz_wpm}** kelime/dk")
+    hiz_ms = 60000 / st.session_state.hiz_wpm
 
     # Başlat / Durdur Butonları
     col_baslat, col_durdur = st.columns([1, 1])
